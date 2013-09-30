@@ -31,22 +31,22 @@ int main(int argc, char *argv[]) {
 
 	/* socket creation */
 	int sd;
-	if((sd = socket(**** CALL SOCKET() HERE TO CREATE A UDP SOCKET ****))<0)
-	{
+	if((sd = socket(PF_INET,SOCK_DGRAM,0))<0){
 		printf("%s: cannot create socket \n",argv[0]);
 		exit(1);
 	}
 
 	/* get server IP address (input must be IP address, not DNS name) */
 	struct sockaddr_in remoteServAddr;
-	bzero(&remoteServAddr,sizeof(remoteServAddr));               //zero the struct
+	bzero(&remoteServAddr,sizeof(remoteServAddr));        //zero the struct
 	remoteServAddr.sin_family = AF_INET;                 //address family
 	remoteServAddr.sin_port = htons(atoi(argv[2]));      //sets port to network byte order
 	remoteServAddr.sin_addr.s_addr = inet_addr(argv[1]); //sets remote IP address
 	printf("%s: sending data to '%s:%s' \n", argv[0], argv[1], argv[2]);
 
+
 	/* Call sendto_ in order to simulate dropped packets */
 	int nbytes;
-	char msg[] = "send this";
+	char msg[] = "OMG CLIENT IS SO MUCH BETTER THAN SERVER";
 	nbytes = sendto_(sd,msg, strlen(msg),0, (struct sockaddr *) &remoteServAddr, sizeof(remoteServAddr));
 }
