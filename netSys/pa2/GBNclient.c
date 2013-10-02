@@ -46,8 +46,48 @@ int main(int argc, char *argv[]) {
 	remoteServAddr.sin_port = htons(atoi(argv[2]));      //sets port to network byte order
 	remoteServAddr.sin_addr.s_addr = inet_addr(argv[1]); //sets remote IP address
 	printf("%s: sending data to '%s:%s' \n", argv[0], argv[1], argv[2]);
+	
+	/* Read file into buffer */
+	char window[150000];
+	
+	FILE *fp; 
+	long file_size;
+			
+	//open file
+	fp=fopen(argv[5], "rb"); 
+		
+	if(fp == NULL){
+		printf("Error opening file!\n");
+		exit(0);
+	}
+		
+	//obtain file size
+	fseek(fp, 0, SEEK_END);
+	file_size = ftell(fp);
+	rewind(fp);
 
-
+	bzero(&window,sizeof(window));
+	size_t result = fread(window, 1, file_size, fp);
+	if(result != file_size){
+		printf("File reading error!");
+		fclose(fp);
+	}
+	fclose(fp);
+	int windowSize = 6; 
+	int pCounter = 0;
+	//While the EOF has not been reached.
+	while(true){
+		//Send window
+		int i = 0;
+		for(i = 0; i < windowSize; i++){
+			//Wrap header, send packet. 
+		}
+		//Wait for acks, move window pointer as neccesary
+		
+		
+	}
+	
+	
 	/* Send packet */
 	int nbytes;
 	char seqNum[4];
