@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <errno.h>
+#include "header.h"
 
 #define MAXBUFSIZE 256
 #define MAXMSGSIZE 50000

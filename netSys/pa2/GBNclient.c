@@ -15,7 +15,9 @@
 #include <signal.h>
 #include <unistd.h>
 #include "sendto_.h"
+#include "header.h"
 
+#define PAYLOADSIZE 1024
 int main(int argc, char *argv[]) {
     
 	/* check command line args. */
@@ -38,6 +40,7 @@ int main(int argc, char *argv[]) {
 
 	/* get server IP address (input must be IP address, not DNS name) */
 	struct sockaddr_in remoteServAddr;
+	unsigned int remoteServAddrLen;
 	bzero(&remoteServAddr,sizeof(remoteServAddr));        //zero the struct
 	remoteServAddr.sin_family = AF_INET;                 //address family
 	remoteServAddr.sin_port = htons(atoi(argv[2]));      //sets port to network byte order
@@ -45,8 +48,52 @@ int main(int argc, char *argv[]) {
 	printf("%s: sending data to '%s:%s' \n", argv[0], argv[1], argv[2]);
 
 
-	/* Call sendto_ in order to simulate dropped packets */
+	/* Send packet */
 	int nbytes;
-	char msg[] = "OMG CLIENT IS SO MUCH BETTER THAN SERVER";
-	nbytes = sendto_(sd,msg, strlen(msg),0, (struct sockaddr *) &remoteServAddr, sizeof(remoteServAddr));
+	char seqNum[4];
+	char payload[PAYLOADSIZE];
+	strcpy(seqNum, "001");
+	strcpy(payload, "To be or not to be");
+	int headerSize = sizeof(seqNum);
+	int packetSize = PAYLOADSIZE + headerSize;
+	char packet[packetSize];
+	
+	bzero(&packet, packetSize);
+	//Change to memcpy when writing binary file
+	strncat(packet, seqNum, headerSize); //copy header
+	strncat(packet, payload ,PAYLOADSIZE); //copy payload
+	
+	//printf("Size of packet: %d\n", packetSize);
+	//printf("packet: %s\n", packet);
+	nbytes = sendto_(sd, packet, packetSize, 0, (struct sockaddr *) &remoteServAddr, sizeof(remoteServAddr));
+	
+	//Wait for ack
+	struct timeval tv;
+    fd_set readfds;
+    
+    //set timeout
+    tv.tv_sec = 0;
+    tv.tv_usec = 50000;
+    
+    FD_ZERO(&readfds);
+    FD_SET(sd, &readfds);
+
+	char ack[4];
+	
+    if(select(sd+1, &readfds, NULL, NULL, &tv)<0){
+		perror("Select error");
+	}
+    
+    if (FD_ISSET(sd, &readfds)){
+		//ACK Received process ack
+        printf("Ack received!\n");
+        nbytes = recvfrom(sd, ack, sizeof(ack), 0, (struct sockaddr*)&remoteServAddr, &remoteServAddrLen);
+		printf("ack: %s\n", ack);
+    }else{
+		//Timeout Resend window
+        printf("Timed out.\n");
+	}
 }
+
+
+

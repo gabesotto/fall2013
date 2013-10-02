@@ -5,8 +5,8 @@
 
 
 static int p_threshold;
-static int c_threshold;
-static int count = 1;
+//static int c_threshold;
+//static int count = 1;
 
 void init_net_lib(double f1, unsigned int seed)
 {
