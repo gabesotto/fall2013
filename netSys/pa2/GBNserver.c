@@ -47,31 +47,50 @@ int main(int argc, char *argv[]) {
 		exit(1); 
 	}
 
-	/* Receive message from client */
 	struct sockaddr_in cliAddr;
 	unsigned int cliLen;
 	int nbytes;
 	char recvmsg[1028];
-	bzero(recvmsg,sizeof(recvmsg));
-	cliLen = sizeof(cliAddr);
-	nbytes = recvfrom(sd, &recvmsg, sizeof (recvmsg), 0, (struct sockaddr *) &cliAddr, &cliLen);
-	
-	printf("client says %s \n", recvmsg);
-	
-	char ack[4];
+	char packetNum[4];
 	char payload[1024];
-	stripHeader(recvmsg, ack);
-	memmove(recvmsg, recvmsg+3, sizeof(recvmsg));
-	memcpy(payload, recvmsg, sizeof(payload));
-	//printf("header stripped: %s \n", ack);
-	//printf("payload stripped; %s \n", payload);
 	
-	/* Send Ack */
-	nbytes = sendto_(sd, ack, sizeof(ack),0, (struct sockaddr *) &cliAddr, cliLen);
-	printf("nbytes sent: %d\n", nbytes);
+	while(1){
+		
+		/* Receive message from client */
+		bzero(recvmsg,sizeof(recvmsg));
+		bzero(packetNum, sizeof(packetNum));
+		bzero(payload, sizeof(payload));
+		cliLen = sizeof(cliAddr);
+		nbytes = recvfrom(sd, &recvmsg, sizeof (recvmsg), 0, (struct sockaddr *) &cliAddr, &cliLen);
+		//printf("received %d bytes\n", nbytes);
+		//printf("client says %s \n", recvmsg);
+		
+		stripHeader(recvmsg, packetNum);
+		memmove(recvmsg, &recvmsg[3], sizeof(recvmsg));
+		memcpy(payload, recvmsg, sizeof(payload));
+		//printf("header stripped: %s \n", ack);
+		//printf("payload stripped; %s \n", payload);
+		int frameNum = atoi(packetNum);
+		printf("received packet #: %d\n", frameNum);
+		
+		if(){ //Packet is within receive window size (rws)
+			//write to payload to file buffer
+			//send ack back
+		}else if(){ //final packet flag
+			break;
+		}else{ //throw away packet
+			continue;
+		}
+
+		/* Send Ack */
+		nbytes = sendto_(sd, packetNum, sizeof(packetNum),0, (struct sockaddr *) &cliAddr, cliLen);
+	}
+	
+	close(sd);
+	return 0;
 }
 
-//Remove header from packet, returns int version of header
+//Remove header from packet
 void stripHeader(char packet[], char head[]){
 	int i = 0;
 	for(i = 0; i < 3; i++){
