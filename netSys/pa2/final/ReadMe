@@ -1,0 +1,32 @@
+Author: Gabe Russotto
+CSCI 4273 - Network Systems
+Programming Assignment 3
+
+===Description===
+This program implements the sliding window protocol by transferring a
+file 100KB or less from a client to a server despite possible packet loss.
+It does this by implementing sliding windows at both client and the server
+with packet timeouts when the client does not receive an ack from the server.
+The server will discard packets which are out of the range of its sliding 
+window and will also buffer packets that are out of order.
+
+===Compilation===
+To compile the program simply run make in the working directory with
+GBNclient.c and GBNserver.c 
+
+===Usage===
+After compliation two executable can be run with the usage:
+$ ./GBNclient <server_ip> <server_port> <error rate> <random seed> <send_file> <send_log> 
+$ ./GBNserver <server_port> <error rate> <random seed> <send_file> <send_log>
+
+===Implementation Details===
+The client first reads the file into a large buffer and then reads from 
+that buffer into a 1024 KB payload. A header is then attached that contains
+a 3 byte sequence number, a 4 byte payload size, and a 1 byte final packet flag.
+(For a total of 1033KB packets) These packets are sent to the server using
+the sliding window protocol, the server reads these packets into another
+large buffer and then writes to it to file once the last packet is received.
+The server sends an ack back of 6 bytes, a 3 byte seq number, and a 3 byte
+cum ack  number. If the final ack is lost on transmission the client only
+retransmits 10 times before closing. 
+
