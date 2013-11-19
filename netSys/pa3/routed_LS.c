@@ -10,6 +10,26 @@
 #include <arpa/inet.h>	
 
 #define MAXNODES 10
+
+
+struct tableEntry {
+    char host;
+    char target;
+    int weight;
+    int fromPort;
+    int toPort;
+    int seqNum;
+    int TTL;
+};
+
+void printTable(struct tableEntry lspTable[], int size){
+	printf("%-10s%-10s%-10s%-10s%-10s\n", "Host", "Target", "Cost", "From Port", "To Port");
+	int i;
+	for(i = 0; i < size; i++){
+		printf("%-10c%-10c%-10d%-15d%-15d\n", lspTable[i].host, lspTable[i].target, lspTable[i].weight, lspTable[i].fromPort, lspTable[i].toPort);
+	}
+}
+
 int checkConnections(int connected[], int numOfNeighbors){
 	//check if connectted to all neighbors
 	int i;
@@ -24,16 +44,6 @@ int checkConnections(int connected[], int numOfNeighbors){
 	}
 	return 1;
 }
-
-struct tableEntry {
-    char host;
-    char target;
-    int weight;
-    int fromPort;
-    int toPort;
-    int seqNum;
-    int TTL;
-};
 
 int main(int argc, const char* argv[]){
 	
@@ -95,7 +105,7 @@ int main(int argc, const char* argv[]){
 		
 		//remote
 		bzero(&destAddr[i],sizeof(destAddr[i]));
-		destAddr[i].sin_family = AF_INET;
+		destAddr[i].sin_family=AF_INET;
 		destAddr[i].sin_addr.s_addr=inet_addr("127.0.0.1");
 		destAddr[i].sin_port=htons(destPort[i]);
 		
@@ -146,6 +156,7 @@ int main(int argc, const char* argv[]){
 	
 	//Connected to all neighbors!
 	printf("Connection established with all neighbors at node %c.\n", source[0]);
+	sleep(10);
 	
 	//Things to keep track of:		
 	struct tableEntry lspTable[numOfNeighbors];
@@ -168,23 +179,21 @@ int main(int argc, const char* argv[]){
 	//serialize LSP packet for sending
 	memcpy(&sendBuffer[0], &lspTable[0], sizeof(lspTable));
 		
+	//set up listening sockets
+	for(i = 0; i < numOfNeighbors; i++){
+		maxfd = sockfd[i];
+		FD_SET(sockfd[i], &masterfds);
+		lspTable[i].seqNum = seqNum;
+	}	
+			
 	for(;;){
 		struct timeval tv;
 		tv.tv_sec = 5;
 		tv.tv_usec = 0;
-		FD_ZERO(&readfds);
-		FD_ZERO(&masterfds);
-	
-		//set up listening sockets
-		for(i = 0; i < numOfNeighbors; i++){
-			maxfd = sockfd[i];
-			FD_SET(sockfd[i], &masterfds);
-			lspTable[i].seqNum = seqNum;
-		}
 		
 		//Listen for packets for 5 seconds.
 		readfds = masterfds;
-		if(select(maxfd, &readfds, NULL, NULL, &tv) < 0){
+		if(select(maxfd+1, &readfds, NULL, NULL, &tv) < 0){
 			printf("Select() Error!\n");
 			return 1;
 		}
@@ -197,29 +206,20 @@ int main(int argc, const char* argv[]){
 			if (FD_ISSET(sockfd[i], &readfds)){
 							
 				//Got LSP from neighbor
-				nbytes = recv(sockfd[i], recvBuffer, sizeof(recvBuffer), MSG_DONTWAIT);
+				nbytes = recv(sockfd[i], recvBuffer, sizeof(recvBuffer), 0);
 				if(nbytes <= 0){
 					printf("Error on recv()\n");
 					return -1;
 				}
+				
 				//deserialize packet
+				int rows = nbytes / sizeof(struct tableEntry);
 				memcpy(&lspRecvTable[0], &recvBuffer[0], nbytes);
-				printf("Got packet from %c\n", lspRecvTable[0].host);
-				
+				printf("%c: Got packet from %c with %d rows\n", source[0], recvBuffer[0], rows);
+				//printTable(lspRecvTable, rows);
+
 				//run djikstras
-				
-				//Send it to other neighbors
-				int j = 0;
-				for(j = 0; j < numOfNeighbors; j++){
-					if(j != i){
-						nbytes = send(sockfd[j], recvBuffer, nbytes, 0);
-						if(nbytes <= 0){
-							printf("Error on send()\n");
-							return -1;
-						}
-					}
-				}
-				//break; //maybe? maybe not?
+				break; 
 				
 			//At timeout transmit new LSP.
 			}else{
