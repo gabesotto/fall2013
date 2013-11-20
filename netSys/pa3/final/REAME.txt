@@ -1,0 +1,22 @@
+Author: Gabe Russotto
+Class: Network Systems
+Date: 11.19.13
+
+Programming Assignment 3
+
+USAGE: "./routed_LS <RouterID> <LogFileName> <Initialization file>"
+
+DESCRIPTION: This program implements a simple version of OSPF Link State routing.
+Several linux processes connect through ports and simulate routers. Once connected
+the routers begin sharing Link State Packets to learn about the topology of the network.
+Djikstras is then used to find the shortest path between any two routers.
+
+WHAT DOESN'T WORK: 
+-Exiting succesfully.
+-Logging the correct information.
+
+WHAT DOES WORK:
+-Routers succesfully connect to all other routers and initalize correctly.
+-Once connected routers flood LSP to all other routers in the network.
+-The internal routing table is correctly populated.
+-Djikstras finds the shortest path on the routing table.

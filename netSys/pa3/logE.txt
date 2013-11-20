@@ -1,0 +1,148 @@
+routing table: 
+Host      Target    Cost      From Port To Port   
+E         C         3         9713           9708           
+E         D         1         9714           9711           
+E         F         1         9715           9716           
+C         A         1         9706           9702           
+C         D         1         9707           9710           
+C         E         3         9708           9713           
+result from djikstras:
+A:0 B:-294682282 C:-294683280 D:-294683279 E:-294683277 F:-294683276 
+routing table: 
+Host      Target    Cost      From Port To Port   
+E         C         3         9713           9708           
+E         D         1         9714           9711           
+E         F         1         9715           9716           
+C         A         1         9706           9702           
+C         D         1         9707           9710           
+C         E         3         9708           9713           
+B         A         4         9704           9701           
+B         D         1         9705           9709           
+result from djikstras:
+A:0 B:-294682282 C:-294683280 D:-294683279 E:-294683277 F:-294683276 
+routing table: 
+Host      Target    Cost      From Port To Port   
+E         C         3         9713           9708           
+E         D         1         9714           9711           
+E         F         1         9715           9716           
+C         A         1         9706           9702           
+C         D         1         9707           9710           
+C         E         3         9708           9713           
+B         A         4         9704           9701           
+B         D         1         9705           9709           
+result from djikstras:
+A:0 B:-294682282 C:-294683280 D:-294683279 E:-294683277 F:-294683276 
+routing table: 
+Host      Target    Cost      From Port To Port   
+E         C         3         9713           9708           
+E         D         1         9714           9711           
+E         F         1         9715           9716           
+C         A         1         9706           9702           
+C         D         1         9707           9710           
+C         E         3         9708           9713           
+B         A         4         9704           9701           
+B         D         1         9705           9709           
+D         B         1         9709           9705           
+D         C         1         9710           9707           
+D         E         1         9711           9714           
+D         F         2         9712           9718           
+result from djikstras:
+A:0 B:-294683278 C:-294683280 D:-294683279 E:-294683278 F:-294683277 
+routing table: 
+Host      Target    Cost      From Port To Port   
+E         C         3         9713           9708           
+E         D         1         9714           9711           
+E         F         1         9715           9716           
+C         A         1         9706           9702           
+C         D         1         9707           9710           
+C         E         3         9708           9713           
+B         A         4         9704           9701           
+B         D         1         9705           9709           
+D         B         1         9709           9705           
+D         C         1         9710           9707           
+D         E         1         9711           9714           
+D         F         2         9712           9718           
+result from djikstras:
+A:0 B:-294683278 C:-294683280 D:-294683279 E:-294683278 F:-294683277 
+routing table: 
+Host      Target    Cost      From Port To Port   
+E         C         3         9713           9708           
+E         D         1         9714           9711           
+E         F         1         9715           9716           
+C         A         1         9706           9702           
+C         D         1         9707           9710           
+C         E         3         9708           9713           
+B         A         4         9704           9701           
+B         D         1         9705           9709           
+D         B         1         9709           9705           
+D         C         1         9710           9707           
+D         E         1         9711           9714           
+D         F         2         9712           9718           
+F         A         4         9717           9703           
+F         D         2         9718           9712           
+F         E         1         9716           9715           
+result from djikstras:
+A:0 B:-294683278 C:-294683280 D:-294683279 E:-294683278 F:-294683277 
+routing table: 
+Host      Target    Cost      From Port To Port   
+E         C         3         9713           9708           
+E         D         1         9714           9711           
+E         F         1         9715           9716           
+C         A         1         9706           9702           
+C         D         1         9707           9710           
+C         E         3         9708           9713           
+B         A         4         9704           9701           
+B         D         1         9705           9709           
+D         B         1         9709           9705           
+D         C         1         9710           9707           
+D         E         1         9711           9714           
+D         F         2         9712           9718           
+F         A         4         9717           9703           
+F         D         2         9718           9712           
+F         E         1         9716           9715           
+result from djikstras:
+A:0 B:-294683278 C:-294683280 D:-294683279 E:-294683278 F:-294683277 
+routing table: 
+Host      Target    Cost      From Port To Port   
+E         C         3         9713           9708           
+E         D         1         9714           9711           
+E         F         1         9715           9716           
+C         A         1         9706           9702           
+C         D         1         9707           9710           
+C         E         3         9708           9713           
+B         A         4         9704           9701           
+B         D         1         9705           9709           
+D         B         1         9709           9705           
+D         C         1         9710           9707           
+D         E         1         9711           9714           
+D         F         2         9712           9718           
+F         A         4         9717           9703           
+F         D         2         9718           9712           
+F         E         1         9716           9715           
+A         B         4         9701           9704           
+A         C         1         9702           9706           
+A         F         4         9703           9717           
+result from djikstras:
+A:0 B:3 C:1 D:2 E:3 F:4 
+routing table: 
+Host      Target    Cost      From Port To Port   
+E         C         3         9713           9708           
+E         D         1         9714           9711           
+E         F         1         9715           9716           
+C         A         1         9706           9702           
+C         D         1         9707           9710           
+C         E         3         9708           9713           
+B         A         4         9704           9701           
+B         D         1         9705           9709           
+D         B         1         9709           9705           
+D         C         1         9710           9707           
+D         E         1         9711           9714           
+D         F         2         9712           9718           
+F         A         4         9717           9703           
+F         D         2         9718           9712           
+F         E         1         9716           9715           
+A         B         4         9701           9704           
+A         C         1         9702           9706           
+A         F         4         9703           9717           
+result from djikstras:
+A:0 B:3 C:1 D:2 E:3 F:4 

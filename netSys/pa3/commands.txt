@@ -1,0 +1,6 @@
+Commands:
+
+./routed_LS F logF.txt init.txt  & 
+  
+./routed_LS A logA.txt init.txt  & ./routed_LS B logB.txt init.txt  & ./routed_LS C logC.txt init.txt  & ./routed_LS D logD.txt init.txt  & ./routed_LS E logE.txt init.txt  & 
+
